@@ -1,0 +1,30 @@
+name: Build Dylib
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Theos
+        uses: Randomblock1/theos-action@v1
+
+      - name: Build
+        run: |
+          make clean
+          make FINALPACKAGE=1 -j$(sysctl -n hw.ncpu)
+
+      - name: Find dylib
+        run: |
+          find . -name "*.dylib" -type f
+
+      - name: Upload dylib
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-dylib
+          path: "**/*.dylib"
