@@ -1,0 +1,8 @@
+Package: com.test.tweak
+Name: TestTweak
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: Test tweak dylib
+Maintainer: arturcheek2012-pixel
+Author: arturcheek2012-pixel
+Section: Tweaks
