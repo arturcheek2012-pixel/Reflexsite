@@ -1,20 +1,46 @@
 name: Build IPA
+
 on:
   workflow_dispatch:
-  push:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-14
+
     steps:
-      - uses: actions/checkout@v4
-      - run: brew install xcodegen
-      - run: xcodegen generate
-      - run: |
-          xcodebuild -project GoreBlood.xcodeproj -scheme GoreBlood -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
-          mkdir Payload
-          cp -R build/Build/Products/Release-iphoneos/GoreBlood.app Payload/
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build app
+        run: |
+          xcodebuild \
+            -project GoreBlood.xcodeproj \
+            -scheme GoreBlood \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/GoreBlood.app Payload/
           zip -r GoreBlood.ipa Payload
-      - uses: actions/upload-artifact@v4
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
         with:
-          name: CaughtStrike.ip
-          path: CaughtStrike.ipa
+          name: CaughtStrike.ipa
+          path: CaugthStrike.ipa
