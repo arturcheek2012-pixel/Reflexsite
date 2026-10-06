@@ -16,5 +16,5 @@ jobs:
           zip -r GoreBlood.ipa Payload
       - uses: actions/upload-artifact@v4
         with:
-          name: GoreBlood-ipa
-          path: GoreBlood.ipa
+          name: CaughtStrike.ip
+          path: CaughtStrike.ipa
